@@ -18,5 +18,9 @@ build_ipk.sh
 *.log
 
 # Temporary files
-*.tmp
+*.tmp   
 *.bak
+
+# Go
+go.mod
+go.sum

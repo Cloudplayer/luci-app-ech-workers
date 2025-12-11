@@ -28,10 +28,12 @@ function action_status()
     local http = require "luci.http"
     
     local running = sys.call("pgrep -f ech-workers >/dev/null") == 0
+    local tproxy_active = sys.call("nft list table inet ech-tproxy >/dev/null 2>&1") == 0
     
     http.prepare_content("application/json")
     http.write_json({
-        running = running
+        running = running,
+        tproxy_active = tproxy_active
     })
 end
 

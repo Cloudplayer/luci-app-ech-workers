@@ -6,6 +6,8 @@
             XHR.get('<%=luci.dispatcher.build_url("admin", "services", "ech-workers", "status")%>', null,
                 function (x, data) {
                     var running = data && data.running;
+                    var tproxy_active = data && data.tproxy_active;
+
                     var badge = document.getElementById('ech_status_badge');
                     var text = document.getElementById('ech_status_text');
 
@@ -15,6 +17,23 @@
                     } else {
                         badge.className = 'badge warning';
                         text.innerHTML = '<%:已停止%>';
+                    }
+
+                    // 透明代理状态
+                    var tproxyBadge = document.getElementById('tproxy_status_badge');
+                    var tproxyText = document.getElementById('tproxy_status_text');
+
+                    if (tproxyBadge && tproxyText) {
+                        if (running && tproxy_active) {
+                            tproxyBadge.className = 'badge success';
+                            tproxyText.innerHTML = '<%:运行中%>';
+                        } else if (running) {
+                            tproxyBadge.className = 'badge warning';
+                            tproxyText.innerHTML = '<%:规则未加载%>';
+                        } else {
+                            tproxyBadge.className = 'badge warning';
+                            tproxyText.innerHTML = '<%:未启用%>';
+                        }
                     }
                 }
             );
@@ -52,15 +71,35 @@
             background: #f0ad4e;
             color: white;
         }
+
+        .status-row {
+            margin-bottom: 0.5em;
+        }
+
+        .status-row:last-child {
+            margin-bottom: 0;
+        }
     </style>
 
     <div class="ech-status-box">
-        <strong>
-            <%:服务状态%>:
-        </strong>
-        <span id="ech_status_badge" class="badge warning">
-            <span id="ech_status_text">
-                <%:检测中...%>
+        <div class="status-row">
+            <strong>
+                <%:ECH Workers%>:
+            </strong>
+            <span id="ech_status_badge" class="badge warning">
+                <span id="ech_status_text">
+                    <%:检测中...%>
+                </span>
             </span>
-        </span>
+        </div>
+        <div class="status-row">
+            <strong>
+                <%:透明代理%>:
+            </strong>
+            <span id="tproxy_status_badge" class="badge warning">
+                <span id="tproxy_status_text">
+                    <%:检测中...%>
+                </span>
+            </span>
+        </div>
     </div>

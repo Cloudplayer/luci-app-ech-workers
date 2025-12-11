@@ -87,6 +87,26 @@ o.default = "global"
 o.rmempty = false
 o.description = translate("选择代理分流策略")
 
+-- 透明代理设置
+s = m:section(NamedSection, "config", "ech-workers", translate("透明代理"))
+s.anonymous = true
+s.addremove = false
+
+-- 透明代理开关
+o = s:option(Flag, "tproxy_enabled", translate("启用透明代理"))
+o.default = 0
+o.rmempty = false
+o.description = translate("启用后，局域网设备无需配置即可自动使用代理（仅代理 HTTP/HTTPS 流量）")
+
+-- tproxy 端口
+o = s:option(Value, "tproxy_port", translate("透明代理端口"))
+o.placeholder = "12581"
+o.default = "12581"
+o.rmempty = true
+o.datatype = "port"
+o.description = translate("透明代理监听端口，nftables 会将 80/443 端口流量重定向到此端口")
+o:depends("tproxy_enabled", "1")
+
 -- 服务控制
 s = m:section(TypedSection, "ech-workers", translate("服务控制"))
 s.anonymous = true
@@ -94,3 +114,4 @@ s.addremove = false
 s.template = "ech-workers/control"
 
 return m
+
